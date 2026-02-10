@@ -64,8 +64,10 @@ module airfoil_poly(c = 100, naca = 0015, raw = false) {
 }
 
 // Todo: Wings, w/angles
+
 // Airfoil definition = [c,naca]
 module airfoil_simple_wing(airfoils = false, wing_angle = [0, 0], wing_length = 1000) {
+
   if (airfoils != false) {
     if (!is_list(airfoils[0])) {
       validate(airfoils, print=false);
@@ -105,7 +107,10 @@ module airfoil_simple_wing(airfoils = false, wing_angle = [0, 0], wing_length = 
       }
     }
   } else {
-    echo("No Airfoils defined! Airfoils should be a set of [chord, naca]. Specify one for a uniform wing, two or more for compound wing. If specifying only one, do not put it in a set/vector. Multiple airfoils will be spaced evenly along the wing length.");
+    echo(
+      "No Airfoils defined! Airfoils should be a set of [chord, naca]. Specify one for a uniform wing, two or more for compound wing.\
+      If specifying only one, do not put it in a set/vector. Multiple airfoils will be spaced evenly along the wing length."
+    );
   }
 }
 
@@ -126,6 +131,6 @@ module airfoil_help() {
     <b><i>wing_length</b></i>: length of the wing (optional, default=1000)"
   );
 }
-airfoil_help();
-//translate([0,0,100]) airfoil_poly();
-//airfoil_simple_wing(airfoils=[[100,0015],[200,2414],[100,0015],[200,2414],[100,0015]], wing_angle=[20,-20]);
+// airfoil_help();
+// translate([0,0,100]) airfoil_poly();
+// airfoil_simple_wing(airfoils=[[100,0015],[200,2414],[100,0015],[200,2414],[100,0015]], wing_angle=[20,-20]);
