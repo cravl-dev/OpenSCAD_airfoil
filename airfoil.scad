@@ -80,14 +80,19 @@ module airfoil_simple_wing(airfoils = false, wing_angle = [0, 0], wing_length = 
             airfoil_poly(airfoils[0], airfoils[1]);
       }
     } else {
+      if ($debug == true) { echo(wing_length=wing_length); }
       union() {
-        for (i = [1:len(airfoils) - 1]) {
+        segments = len(airfoils) - 1;
+        segment_length = wing_length / segments;
+        for (i = [1:segments]) {
+          validate(airfoils[i - 1], print=false);
+          if ($debug == true) { echo(str("segment from ", segment_length * (i - 1), " to ", segment_length * i)); }
           hull() {
             translate(
               [
-                (sin(wing_angle[0]) * wing_length * (i - 1) / len(airfoils)),
-                (sin(wing_angle[1]) * wing_length * (i - 1) / len(airfoils)),
-                wing_length * (i - 1) / len(airfoils),
+                (sin(wing_angle[0]) * wing_length * (i - 1) / segments),
+                (sin(wing_angle[1]) * wing_length * (i - 1) / segments),
+                segment_length * (i - 1),
               ]
             )
               linear_extrude(0.1)
@@ -95,9 +100,9 @@ module airfoil_simple_wing(airfoils = false, wing_angle = [0, 0], wing_length = 
 
             translate(
               [
-                (sin(wing_angle[0]) * wing_length * i / len(airfoils)),
-                (sin(wing_angle[1]) * wing_length * i / len(airfoils)),
-                wing_length * i / len(airfoils),
+                (sin(wing_angle[0]) * wing_length * i / segments),
+                (sin(wing_angle[1]) * wing_length * i / segments),
+                segment_length * i,
               ]
             )
               linear_extrude(0.1)
