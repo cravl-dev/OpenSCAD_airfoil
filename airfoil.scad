@@ -1,3 +1,5 @@
+// $airfoil_fn = !is_undef($airfoil_fn) && is_num($airfoil_fn) ? $airfoil_fn : 25;
+// $close_airfoils = !is_undef($close_airfoils) && is_bool($close_airfoils) ? $close_airfoils : true;
 $debug = false;
 
 // https://en.wikipedia.org/wiki/NACA_airfoil
@@ -40,27 +42,47 @@ module validate(spec, print = $debug) {
 module airfoil_poly(c = 100, naca = 0015, raw = false) {
 
   validate([c, raw == true ? 0 : naca]);
+  $airfoil_fn = !is_undef($airfoil_fn) ? $airfoil_fn : 25;
+  $close_airfoils = !is_undef($close_airfoils) ? $close_airfoils : true;
+  res = c / $airfoil_fn; // Resolution of foil poly
 
   // Maximum camber:chord
-  // Points have to be generated with or without camber, depending.
+  m = (raw == true) ? raw[0] : ( (floor(( ( (naca - (naca % 100)) / 1000) )) / 100) );
   // Distance of maximum camber from the airfoil leading edge in tenths of the chord
   p = (raw == true) ? raw[1] : ( ( ( (naca - (naca % 100)) / 100) % 10) / 10);
   // Establish thickness/length ratio
   t = (raw == true) ? raw[2] : ( (naca % 100) / 100);
 
+  /*
+  Resolution bias towards forward edge for cleaner curve (lower = more bias).
+
+  Careful, this will remove resolution from trailing edge, but only
+  really noticible with camber positions greater than 70% (naca > x7xx).
+
+  No bias = chord (var c)
+  */
+  res_bias = 2;
+
   // Points have to be generated with or without camber, depending.
+  res_map_u = [for (x = [0:res:c]) x * min(1, x / (c / res_bias))];
+  if ($debug == true) { echo(res_map_u=res_map_u); }
   points_u =
     (m == 0 || p == 0) ?
-      [for (i = [0:res:c]) let (x = i, y = foil_y(i, c, t)) [x, y]]
-    : [for (i = [0:res:c]) let (x = camber_x(i, c, t, m, p), y = camber_y(i, c, t, m, p)) [x, y]];
+      [for (i = res_map_u) let (x = i, y = foil_y(i, c, t)) [x, y]]
+    : [for (i = res_map_u) let (x = camber_x(i, c, t, m, p), y = camber_y(i, c, t, m, p)) [x, y]];
 
+  res_map_l = [for (x = [c:-res:0]) x * min(1, x / (c / res_bias))];
+  if ($debug == true) { echo(res_map_l=res_map_l); }
   points_l =
     (m == 0 || p == 0) ?
-      [for (i = [c:-1 * res:0]) let (x = i, y = foil_y(i, c, t) * -1) [x, y]]
-    : [for (i = [c:-1 * res:0]) let (x = camber_x(i, c, t, m, p, upper=false), y = camber_y(i, c, t, m, p, upper=false)) [x, y]];
-    if (!is_list(airfoils[0])) {
-      validate(airfoils, print=false);
-  polygon(concat(points_u, points_l)); // draw poly
+      [for (i = res_map_l) let (x = i, y = foil_y(i, c, t) * -1) [x, y]]
+    : [for (i = res_map_l) let (x = camber_x(i, c, t, m, p, upper=false), y = camber_y(i, c, t, m, p, upper=false)) [x, y]];
+
+  if ($debug == true) {
+    echo(points_u=points_u);
+    echo(points_l=points_l);
+  }
+  polygon(concat(points_u, points_l)); // Draw poly
 }
 
 // Todo: Wings, w/angles
