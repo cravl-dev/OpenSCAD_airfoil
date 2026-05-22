@@ -135,7 +135,7 @@ module airfoil_simple_wing(airfoils = false, wing_angle = [0, 0], wing_length = 
     }
   } else {
     echo(
-      "No Airfoils defined! Airfoils should be a set of [chord, naca]. Specify one for a uniform wing, two or more for compound wing.\
+      "No Airfoils defined! Airfoils should be a set of `[chord, naca]`. Specify one for a uniform wing, two or more for compound wing.
       If specifying only one, do not put it in a set/vector. Multiple airfoils will be spaced evenly along the wing length."
     );
   }
@@ -143,19 +143,24 @@ module airfoil_simple_wing(airfoils = false, wing_angle = [0, 0], wing_length = 
 
 module airfoil_help() {
   echo(
-    "<u><b>Parametric Airfoil and Wing generator v0.1</u></b> <br>\
-    For a brief overview of the math and specifications used, see https://en.wikipedia.org/wiki/NACA_airfoil<br>\
-    <u>Globals:</u><br> \
-    <b><i>$close_airfoils</b></i>: Defines whether you want the back of your air foils closed, or if you want them open (default: false) <br>\
-    <b><i>$airfoil_fn</b></i>: number of sides for your airfoil. (default: 100) <br>\
-    <u>airfoil_poly help:</u><br>\
-    <b><i>c</b></i>: Chord length, this is the chord length of your airfoil. (default: 100) <br>\
-    <b><i>naca</b></i>: The NACA 4-digit specification for your airfoil. (default: 0015) <br>\
-    <b><i>raw</b></i>: overrides the NACA code with direct ratios. Provide in the same order as the NACA digits. (e.g NACA 4123 becomes raw [.4,.1,.23])<br>
-    <u>airfoil_simple_wing help:</u> <br>\
-    <b><i>airfoils</b></i>: Airfoils should be a set of [chord, naca]. Specify one for a uniform wing, two or more in a vector for compound wing. If specifying only one, do not put it in a set/vector. Multiple airfoils will be spaced evenly along the wing length. (required)<br>\
-    <b><i>wing_angle</b></i>: a set of angles, [sweep,slope] (optional, default=[0,0])<br>\
-    <b><i>wing_length</b></i>: length of the wing (optional, default=1000)"
+    "\n
+    # Parametric Airfoil and Wing Generator v0.2\n
+    For a brief overview of the math and specifications used, see https://en.wikipedia.org/wiki/NACA_airfoil\n
+   \n
+    ## Globals:\n
+    - `$close_airfoils`: Defines whether you want the back of your air foils closed, or if you want them open (default: false)\n
+    - `$airfoil_fn`: number of sides for your airfoil. (default: 100)\n
+   \n
+    ### `airfoil_poly` args:\n
+    - `c`: Chord length, this is the chord length of your airfoil. (default: 100)\n
+    - `naca`: The NACA 4-digit specification for your airfoil. (default: 0015)\n
+    - `raw`: overrides the NACA code with direct ratios. Provide in the same order as the NACA digits. (e.g NACA 4123 becomes raw `[.4,.1,.23]`)\n
+   \n
+    ### `airfoil_simple_wing` args:\n
+    - `airfoils`: Airfoils should be a set of `[chord, naca]`. Specify one for a uniform wing, two or more in a vector for compound wing. (required)\n
+      - If specifying only one, do not put it in a set/vector. Multiple airfoils will be spaced evenly along the wing length.\n
+    - `wing_angle`: a set of angles in the form `[sweep, slope]` (optional, default=[0,0])\n
+    - `wing_length`: length of the wing (optional, default=1000)"
   );
 }
 // airfoil_help();
