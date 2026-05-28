@@ -128,7 +128,7 @@ module airfoil_simple_wing(airfoils = false, wing_angle = [0, 0], wing_length = 
     }
   } else {
     echo(
-      "No Airfoils defined! Airfoils should be a set of `[chord, naca]`. Specify one for a uniform wing, two or more for compound wing.
+      "No Airfoils defined! Airfoils should be a set of `[chord, naca]`. Specify one for a uniform wing, two or more for compound wing.\n
       If specifying only one, do not put it in a set/vector. Multiple airfoils will be spaced evenly along the wing length."
     );
   }
@@ -141,25 +141,23 @@ module airfoil_help() {
     For a brief overview of the math and specifications used, see https://en.wikipedia.org/wiki/NACA_airfoil\n
    \n
     ## Globals:\n
-    - `$close_airfoils`: Defines whether you want the back of your air foils closed, or if you want them open (default: false)\n
-    - `$airfoil_fn`: number of sides for your airfoil. (default: 100)\n
+    - `$close_airfoils`: Defines whether you want the back of your air foils closed, or if you want them open (default: `false`)\n
+    - `$airfoil_fn`: number of sides for your airfoil. (default: `100`)\n
    \n
     ### `airfoil_poly` args:\n
-    - `c`: Chord length, this is the chord length of your airfoil. (default: 100)\n
-    - `naca`: The NACA 4-digit specification for your airfoil. (default: 0015)\n
+    - `c`: Chord length, this is the chord length of your airfoil. (default: `100`)\n
+    - `naca`: The NACA 4-digit specification for your airfoil. (default: `0015`)\n
     - `raw`: Overrides the NACA code with direct ratios. Provide in the same order as the NACA digits. (e.g NACA 4123 becomes raw `[.4,.1,.23]`)\n
-    - `res_bias`: Resolution bias towards forward edge for cleaner curve (lower = more bias).
-      - Careful, this will remove resolution from trailing edge, but only really noticible with camber positions greater than 70% (naca > x7xx).
-
-  No bias = chord (var c)
+    - `res_bias`: Resolution bias towards forward edge for cleaner curve. Lower = more bias. (min: `1`, max (no bias): `c`, default: `2`)\n
+      - Careful, this will remove resolution from trailing edge, but only really noticible with camber positions greater than 70% (naca > x7xx).\n
    \n
     ### `airfoil_simple_wing` args:\n
-    - `airfoils`: Airfoils should be a set of `[chord, naca]`. Specify one for a uniform wing, two or more in a vector for compound wing. (required)\n
+    - `airfoils`: Airfoils should be a set of `[chord, naca]`. Specify one for a uniform wing, two or more in a vector for compound wing.\n
       - If specifying only one, do not put it in a set/vector. Multiple airfoils will be spaced evenly along the wing length.\n
-    - `wing_angle`: A set of angles in the form `[sweep, slope]` (optional, default=[0,0])\n
-    - `wing_length`: Length of the wing (optional, default=1000)"
+    - `wing_angle`: A set of angles in the form `[sweep, slope]`. (optional, default=`[0,0]`)\n
+    - `wing_length`: Length of the wing. (optional, default=`1000`)"
   );
 }
-// airfoil_help();
+airfoil_help();
 // translate([0,0,100]) airfoil_poly();
 // airfoil_simple_wing(airfoils=[[100,0015],[200,2414],[100,0015],[200,2414],[100,0015]], wing_angle=[20,-20]);
