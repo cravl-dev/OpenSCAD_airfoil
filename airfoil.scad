@@ -39,7 +39,7 @@ module validate(spec, print = $debug) {
   assert(is_num(spec[1]) && 0 < spec[1] && spec[1] <= 9999, str("Invalid NACA specification \"", spec[1], "\""));
 }
 
-module airfoil_poly(c = 100, naca = 0015, raw = false) {
+module airfoil_poly(c = 100, naca = 0015, raw = false, res_bias=2) {
 
   validate([c, raw == true ? 0 : naca]);
   $airfoil_fn = !is_undef($airfoil_fn) ? $airfoil_fn : 25;
@@ -52,16 +52,6 @@ module airfoil_poly(c = 100, naca = 0015, raw = false) {
   p = (raw == true) ? raw[1] : ( ( ( (naca - (naca % 100)) / 100) % 10) / 10);
   // Establish thickness/length ratio
   t = (raw == true) ? raw[2] : ( (naca % 100) / 100);
-
-  /*
-  Resolution bias towards forward edge for cleaner curve (lower = more bias).
-
-  Careful, this will remove resolution from trailing edge, but only
-  really noticible with camber positions greater than 70% (naca > x7xx).
-
-  No bias = chord (var c)
-  */
-  res_bias = 2;
 
   // Points have to be generated with or without camber, depending.
   res_map_u = [for (x = [0:res:c]) x * min(1, x / (c / res_bias))];
@@ -154,13 +144,17 @@ module airfoil_help() {
     ### `airfoil_poly` args:\n
     - `c`: Chord length, this is the chord length of your airfoil. (default: 100)\n
     - `naca`: The NACA 4-digit specification for your airfoil. (default: 0015)\n
-    - `raw`: overrides the NACA code with direct ratios. Provide in the same order as the NACA digits. (e.g NACA 4123 becomes raw `[.4,.1,.23]`)\n
+    - `raw`: Overrides the NACA code with direct ratios. Provide in the same order as the NACA digits. (e.g NACA 4123 becomes raw `[.4,.1,.23]`)\n
+    - `res_bias`: Resolution bias towards forward edge for cleaner curve (lower = more bias).
+      - Careful, this will remove resolution from trailing edge, but only really noticible with camber positions greater than 70% (naca > x7xx).
+
+  No bias = chord (var c)
    \n
     ### `airfoil_simple_wing` args:\n
     - `airfoils`: Airfoils should be a set of `[chord, naca]`. Specify one for a uniform wing, two or more in a vector for compound wing. (required)\n
       - If specifying only one, do not put it in a set/vector. Multiple airfoils will be spaced evenly along the wing length.\n
-    - `wing_angle`: a set of angles in the form `[sweep, slope]` (optional, default=[0,0])\n
-    - `wing_length`: length of the wing (optional, default=1000)"
+    - `wing_angle`: A set of angles in the form `[sweep, slope]` (optional, default=[0,0])\n
+    - `wing_length`: Length of the wing (optional, default=1000)"
   );
 }
 // airfoil_help();
