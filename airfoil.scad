@@ -1,5 +1,7 @@
-// $airfoil_fn = !is_undef($airfoil_fn) && is_num($airfoil_fn) ? $airfoil_fn : 25;
-// $close_airfoils = !is_undef($close_airfoils) && is_bool($close_airfoils) ? $close_airfoils : true;
+// When including this in your project, consider commenting these
+// and defining them instead in your base project file
+$airfoil_fn = 25;
+$close_airfoils = true;
 $debug = false;
 
 // https://en.wikipedia.org/wiki/NACA_airfoil
