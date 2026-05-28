@@ -34,16 +34,17 @@ function camber_x(x, c, t, m, p, upper = true) =
     : (x + (foil_y(x, c, t) * sin(theta(x, c, m, p))))
   );
 
-module validate(spec, print = $debug) {
+module validate(spec, res_bias = 2, print = $debug) {
   if (print == true) { echo(str("Validating spec ", spec)); }
   assert(is_list(spec) && len(spec) == 2, "Airfoils must be specified as [chord, naca]");
   assert(is_num(spec[0]) && 0 < spec[0], str("Invalid chord \"", spec[0], "\""));
   assert(is_num(spec[1]) && 0 < spec[1] && spec[1] <= 9999, str("Invalid NACA specification \"", spec[1], "\""));
+  assert(is_num(res_bias) && 1 <= res_bias && res_bias <= spec[0], str("Invalid resolution bias \"", res_bias, "\" (min: 1, max: ", spec[0], ")"));
 }
 
-module airfoil_poly(c = 100, naca = 0015, raw = false, res_bias=2) {
+module airfoil_poly(c = 100, naca = 0015, raw = false, res_bias = 2) {
 
-  validate([c, raw == true ? 0 : naca]);
+  validate([c, raw == true ? 0 : naca], res_bias);
   $airfoil_fn = !is_undef($airfoil_fn) ? $airfoil_fn : 25;
   $close_airfoils = !is_undef($close_airfoils) ? $close_airfoils : true;
   res = c / $airfoil_fn; // Resolution of foil poly
